@@ -43,22 +43,8 @@ const getUsers = async(req, res ) => {
 
 const getUser = async( req, res ) => {
     try {
-        const {user, params} = req;
-
-        const userFind = await User.get(params.id);
-        if(!userFind) {
-            return res.status(400).json({
-                msg: 'The User not exist'
-            })
-        }
-
-        if(userFind.id !== user.id) {
-            if(user.role !== 'ADMIN') {
-                return res.status(401).json({
-                    msg: 'Unathorized'
-                })
-            }
-        }
+        
+        const userFind = await User.get(req.params.id);
 
         return res.json({
             user: userFind
@@ -70,8 +56,58 @@ const getUser = async( req, res ) => {
         }); 
     }
 }
+
+const updateUser = async( req, res ) => {
+    try {
+        const {params, body} = req;
+        const id = params.id;
+
+        if(body.password) {
+            const salt = bcryptjs.genSaltSync();
+            body.password = bcryptjs.hashSync(body.password, salt)
+        }
+
+        const userUpdate = await User.update(id, body)
+        return res.json({
+            user: userUpdate
+        })
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            msg: "Talk to the administrator",
+        }); 
+    }
+}
+
+const deleteUser = async(req, res) => {
+    try {
+        const user = await User.get(req.params.id);
+        
+        if(!user) {
+            res.status(400).json({
+                msg: 'User not exist'
+            })
+        }
+    
+        await user.delete()
+    
+        res.json({
+            msg: 'User Deleted',
+            user
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            msg: "Talk to the administrator",
+        }); 
+    }
+}
+
 module.exports={
     createUser,
     getUsers,
-    getUser
+    getUser,
+    updateUser, 
+    deleteUser
 }
