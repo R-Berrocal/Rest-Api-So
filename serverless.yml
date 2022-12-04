@@ -32,6 +32,7 @@ provider:
   environment:
     TEST_ENV: 'HELLO WORLD'
     STAGE: ${self:custom.stage}
+    SECRETORPRIVATEKEY: 
 
   iam:
     role:
