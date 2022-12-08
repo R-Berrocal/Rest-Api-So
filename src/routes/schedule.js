@@ -33,12 +33,10 @@ router.post('/',[
 ],createSchedule)
 
 router.get('/',[
-   validateJWT,
    validateFields 
 ], getSchedules)
 
 router.get('/:id', [
-    validateJWT,
     check('id').custom(scheduleExist),
     validateFields
 ], getSchedule)
