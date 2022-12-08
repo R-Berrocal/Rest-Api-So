@@ -1,58 +1,32 @@
 const { model, Schema } = require("dynamoose");
+
+const ScheduleObject = {
+    start_time: {
+      type: String,
+      required: true,
+    },
+    end_time: {
+      type: String,
+      required: true,
+    }
+};
+
 const scheduleSchema = new Schema({
     id: {
         type: String,
         required: true,
         hashKey: true
     },
-    start_time_1: {
-        type: String,
-        required: true,
-    },
-    end_time_1: {
-        type: String,
-        required: true,
-    },
-    start_time_2: {
-        type: String,
-        required: true,
-    },
-    end_time_2: {
-        type: String,
-        required: true,
-    },
-    start_time_3: {
-        type: String,
-        required: true,
-    },
-    end_time_3: {
-        type: String,
-        required: true,
-    },
-    start_time_4: {
-        type: String,
-        required: true,
-    },
-    end_time_4: {
-        type: String,
-        required: true,
-    },
-    start_time_5: {
-        type: String,
-        required: true,
-    },
-    end_time_5: {
-        type: String,
-        required: true,
-    },
-    start_time_6: {
-        type: String,
-        required: true,
-    },
-    end_time_6: {
-        type: String,
-        required: true,
-    },
+    schedule: {
+        type: Array,
+        schema: [
+            {
+                type: Object,
+                schema: ScheduleObject
+            }
+        ],
+        default: []
+    }
 },{
     timestamps: true
 });
