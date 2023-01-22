@@ -22,8 +22,17 @@ const createModifiedSchedule = async( req, res) => {
 
 const getModifiedSchedules = async(req, res) => {
     try {
-        const modifiedSchedules = await (await ModifiedSchedule.scan().exec()).populate();
-        console.log({modifiedSchedules});
+        let modifiedSchedules = [];
+        let response = await (await ModifiedSchedule.scan().exec()).populate();
+        modifiedSchedules = modifiedSchedules.concat(response);
+
+        while(response.lastKey) {
+            response = await (await ModifiedSchedule.scan().startAt(response.lastKey)
+                                      .exec()).populate();
+
+            modifiedSchedules = modifiedSchedules.concat(response)
+        }
+        
         res.json({
             modifiedSchedules
         })
